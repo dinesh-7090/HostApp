@@ -1,1 +1,3 @@
-console.log("Website loaded successfully!");
+function explore() {
+    window.location.href = "#sarees";
+}
