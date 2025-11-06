@@ -9,12 +9,15 @@ app.use(bodyParser.json());
 
 // 🔹 Replace these with your actual Azure PostgreSQL details
 const pool = new Pool({
-  user: 'cycle@welcome',
+  user: 'welcome',
   host: 'cycle.postgres.database.azure.com',
   database: 'postgres',
   password: 'velcome123@',
   port: 5432,
-  ssl: true, // Azure requires SSL
+  //ssl: true, // Azure requires SSL
+  ssl: {
+    rejectUnauthorized: false, // required for Azure SSL
+  },
 });
 
 // Test database connection
