@@ -21,7 +21,7 @@
             </ul>
         </nav>
     </header>
-
+   
     <section id="home">
         <h2>Welcome to Our Boutique</h2>
         <p>Discover elegant sarees and custom designs perfect for every occasion.</p>
@@ -29,6 +29,10 @@
     </section>
 
     <section id="sarees">
+        <h2>Our Saree Collection</h2>
+        <div class="gallery" id="gallery"></div>
+    </section>
+    <!-- <section id="sarees">
         <h2>Our Saree Collection</h2>
         <div class="gallery">
             <!-- <img src="https://via.placeholder.com/250x300?text=Saree+1" alt="Saree 1">
@@ -38,7 +42,7 @@
             <img src="images/saree2.jpg" alt="Saree 1">
             <img src="images/saree3.jpg" alt="Saree 1">            
         </div>
-    </section>
+    </section> -->
 
     <section id="boutique">
         <h2>Boutique Designs</h2>
@@ -70,6 +74,22 @@
         <p>© 2025 Elegant Sarees & Boutique</p>
     </footer>
 
-    <script src="script.js"></script>
+    <!-- <script src="script.js"></script> -->
+        <script>
+      const gallery = document.getElementById('gallery');
+      const totalImages = 3; // Adjust this count to the number of saree images you have
+
+      for (let i = 1; i <= totalImages; i++) {
+        const img = document.createElement('img');
+        img.src = `images/saree${i}.jpg`;
+        img.alt = `Saree ${i}`;
+        gallery.appendChild(img);
+      }
+
+      function explore() {
+        // Example explore function
+        alert("Explore more sarees soon!");
+      }
+    </script>
 </body>
 </html>
