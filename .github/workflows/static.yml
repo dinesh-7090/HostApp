@@ -79,8 +79,8 @@ jobs:
           # Or you could add actual test scripts here like:
           # npm test
           
-      - name: Stop server (optional)
-        run: kill $(jobs -p)
+      # - name: Stop server (optional)
+      #   run: kill $(jobs -p)
 
   # Deploy to GitHub Pages (for static content)
   deploy:
