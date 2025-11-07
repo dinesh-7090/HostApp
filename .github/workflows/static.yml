@@ -41,3 +41,6 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+      - name: Run server
+        run: |
+          npm run start  # Assuming you have a start script in package.json
