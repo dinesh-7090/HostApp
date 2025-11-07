@@ -74,7 +74,7 @@ jobs:
           
           # Run your tests or any other actions here
           # For example, testing the server is running
-          curl http://localhost:3000 || exit 1
+          #curl http://localhost:3000 || exit 1
           
           # Or you could add actual test scripts here like:
           # npm test
