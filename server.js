@@ -38,4 +38,45 @@ app.post('/contact', async (req, res) => {
   }
 });
 
+// Server.js
+
+// Import necessary modules
+const express = require('express');
+const bcrypt = require('bcryptjs');
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+
+// Initialize Express app
+const app = express();
+
+// Middleware for parsing the request body (used in POST requests)
+app.use(bodyParser.urlencoded({ extended: true }));
+
+// MongoDB model for User (example)
+const User = mongoose.model('User', new mongoose.Schema({
+  username: String,
+  password: String
+}));
+
+// Signup route (handles POST requests to /signup)
+app.post('/signup', async (req, res) => {
+  const { username, password } = req.body;
+
+  // Hash password before saving to the database
+  bcrypt.hash(password, 10, (err, hashedPassword) => {
+    if (err) return res.status(500).send('Error hashing password');
+    
+    const newUser = new User({ username, password: hashedPassword });
+    
+    newUser.save()
+      .then(() => res.redirect('/login')) // Redirect to login page after successful signup
+      .catch(err => res.status(500).send('Error saving user: ' + err));
+  });
+});
+
+// // Start the server
+// app.listen(3000, () => {
+//   console.log('Server is running on http://localhost:3000');
+// });
+
 app.listen(3000, () => console.log('Server running on http://localhost:3000'));
