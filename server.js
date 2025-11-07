@@ -58,25 +58,59 @@ const User = mongoose.model('User', new mongoose.Schema({
   password: String
 }));
 
-// Signup route (handles POST requests to /signup)
+// Signup Route (handles POST requests to /signup)
 app.post('/signup', async (req, res) => {
-  const { username, password } = req.body;
+  const { username, email, password, confirmPassword } = req.body;
 
-  // Hash password before saving to the database
-  bcrypt.hash(password, 10, (err, hashedPassword) => {
-    if (err) return res.status(500).send('Error hashing password');
-    
-    const newUser = new User({ username, password: hashedPassword });
-    
-    newUser.save()
-      .then(() => res.redirect('/login')) // Redirect to login page after successful signup
-      .catch(err => res.status(500).send('Error saving user: ' + err));
-  });
+  // Validate passwords match
+  if (password !== confirmPassword) {
+    return res.status(400).send('Passwords do not match');
+  }
+
+  try {
+    // Hash the password before storing in DB
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Insert user into the database
+    const query = 'INSERT INTO users (username, email, password) VALUES ($1, $2, $3)';
+    await pool.query(query, [username, email, hashedPassword]);
+
+    res.status(201).send('User registered successfully');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error registering user');
+  }
 });
 
-// // Start the server
-// app.listen(3000, () => {
-//   console.log('Server is running on http://localhost:3000');
-// });
+// Login Route (handles POST requests to /login)
+app.post('/login', async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    // Query to find user by email
+    const query = 'SELECT * FROM users WHERE email = $1';
+    const result = await pool.query(query, [email]);
+
+    if (result.rows.length === 0) {
+      return res.status(400).send('Invalid credentials');
+    }
+
+    const user = result.rows[0];
+
+    // Compare the hashed password with the one in the DB
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).send('Invalid credentials');
+    }
+
+    // Generate a JWT token for the user
+    const token = jwt.sign({ userId: user.id }, 'your_jwt_secret', { expiresIn: '1h' });
+
+    res.status(200).json({ message: 'Login successful', token: token });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error logging in');
+  }
+});
 
 app.listen(3000, () => console.log('Server running on http://localhost:3000'));
